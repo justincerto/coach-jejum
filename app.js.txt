@@ -1,0 +1,207 @@
+class HabitApp {
+    constructor() {
+        this.currentScreen = 'welcome';
+        this.currentDay = 1;
+        this.userHabit = '';
+        this.habitIntensity = 5;
+        this.habitFrequency = '';
+        this.motivationLevel = 7;
+        this.conversationHistory = [];
+        this.completedDays = [];
+        this.currentStep = 0;
+        this.isTyping = false;
+
+        this.therapeuticTechniques = {
+            day1: {
+                title: "Identificação e Reformulação",
+                description: "Identifique e redefina seus hábitos usando técnicas de externalização",
+                steps: [
+                    "Vamos começar identificando quando seu hábito aparece mais forte. Em que momentos você sente mais vontade?",
+                    "Interessante! Agora, imagine que esse hábito é como um visitante indesejado. Como você o descreveria?",
+                    "Ótimo! Quando você vê o hábito como algo separado de você, fica mais fácil lidar com ele. Que nome você daria a esse 'visitante'?",
+                    "Perfeito! Agora que tem um nome, você pode conversar com ele. O que você diria quando ele aparecer amanhã?"
+                ]
+            },
+            day2: {
+                title: "Lembrar Momentos Positivos",
+                description: "Relembre ocasiões em que resistiu com sucesso aos seus impulsos",
+                steps: [
+                    "Hoje vamos relembrar seus sucessos! Conte-me sobre uma vez que você conseguiu resistir ao seu hábito.",
+                    "Que força incrível você demonstrou! O que te ajudou mais naquele momento?",
+                    "Essa estratégia funcionou porque você tem recursos internos poderosos. Qual foi o sentimento mais forte que você teve?",
+                    "Esse sentimento é seu aliado! Como você pode cultivar essa sensação quando precisar dela novamente?"
+                ]
+            },
+            day3: {
+                title: "Visualização",
+                description: "Use técnicas de visualização para imaginar seu sucesso",
+                steps: [
+                    "Imagine um dia sem ceder ao seu hábito. Como seria essa situação?",
+                    "Visualize como você se sente livre e no controle. O que você está fazendo para celebrar essa conquista?",
+                    "Continue reforçando essa imagem positiva sempre que sentir vontade.",
+                    "Visualizando seu sucesso, você fortalece seu cérebro para novas rotinas."
+                ]
+            },
+            day4: {
+                title: "Narrativa Alternativa",
+                description: "Construa uma nova narrativa sobre seus comportamentos",
+                steps: [
+                    "Vamos criar uma nova história para você. Qual personagem você quer ser em vez do antigo hábito?",
+                    "Como essa nova narrativa muda a forma como você se vê?",
+                    "Conte uma breve história onde você supera o hábito com sucesso.",
+                    "Essa narrativa positiva te fortalece. Lembre-se dela sempre!"
+                ]
+            },
+            day5: {
+                title: "Estratégias Se-Então",
+                description: "Desenvolva planos específicos para lidar com gatilhos futuros",
+                steps: [
+                    "Pense em situações que te levam a ceder ao hábito. O que você pode fazer diferente?",
+                    "Crie um plano Se-Então: Se eu sentir a vontade, então eu farei outra coisa. Conte sua estratégia.",
+                    "Como você vai se lembrar de usar essa estratégia quando precisar?",
+                    "Parabéns! Você está preparado para manter essa mudança a longo prazo."
+                ]
+            }
+        };
+
+        this.init();
+    }
+
+    init() {
+        // Screen Elements
+        this.welcomeScreen = document.getElementById('welcome-screen');
+        this.assessmentScreen = document.getElementById('assessment-screen');
+        this.chatScreen = document.getElementById('chat-screen');
+
+        // Buttons and form
+        this.startBtn = document.getElementById('start-journey');
+        this.habitForm = document.getElementById('habit-form');
+        this.chatMessages = document.getElementById('chat-messages');
+        this.chatInputForm = document.getElementById('chat-input-form');
+        this.chatInput = document.getElementById('chat-input');
+        this.currentDayElem = document.getElementById('current-day');
+        this.progressBar = document.getElementById('progress-bar');
+        this.needHelpBtn = document.getElementById('need-help-btn');
+
+        // Intensity and motivation values display
+        this.intensityRange = document.getElementById('intensity-range');
+        this.intensityValue = document.getElementById('intensity-value');
+        this.motivationRange = document.getElementById('motivation-level');
+        this.motivationValue = document.getElementById('motivation-value');
+
+        // Event listeners
+        this.startBtn.onclick = () => this.showAssessment();
+        this.habitForm.onsubmit = (e) => this.handleHabitForm(e);
+        this.chatInputForm.onsubmit = (e) => this.handleUserMessage(e);
+        this.intensityRange.oninput = () => this.intensityValue.textContent = this.intensityRange.value;
+        this.motivationRange.oninput = () => this.motivationValue.textContent = this.motivationRange.value;
+        this.needHelpBtn.onclick = () => this.showHelp();
+
+        this.updateScreen();
+    }
+
+    updateScreen() {
+        this.welcomeScreen.classList.toggle('active', this.currentScreen === 'welcome');
+        this.assessmentScreen.classList.toggle('active', this.currentScreen === 'assessment');
+        this.chatScreen.classList.toggle('active', this.currentScreen === 'chat');
+    }
+
+    showAssessment() {
+        this.currentScreen = 'assessment';
+        this.updateScreen();
+    }
+
+    handleHabitForm(e) {
+        e.preventDefault();
+        this.userHabit = document.getElementById('habit-select').value;
+        this.habitIntensity = parseInt(this.intensityRange.value);
+        this.habitFrequency = document.getElementById('frequency-input').value;
+        this.motivationLevel = parseInt(this.motivationRange.value);
+
+        if (!this.userHabit || !this.habitFrequency) {
+            alert('Por favor, preencha todos os campos.');
+            return;
+        }
+
+        this.currentDay = 1;
+        this.currentStep = 0;
+        this.conversationHistory = [];
+        this.completedDays = [];
+
+        this.showChat();
+        this.sendBotMessage(`Bem-vindo ao programa para quebrar o hábito de ${this.userHabit}. Hoje vamos começar com "${this.therapeuticTechniques['day1'].title}". ${this.therapeuticTechniques['day1'].steps[0]}`);
+        this.updateProgress();
+    }
+
+    showChat() {
+        this.currentScreen = 'chat';
+        this.updateScreen();
+        this.chatMessages.innerHTML = '';
+        this.currentDayElem.textContent = this.currentDay;
+        this.chatInput.value = '';
+    }
+
+    handleUserMessage(e) {
+        e.preventDefault();
+        if (this.isTyping) return;
+
+        const userMsg = this.chatInput.value.trim();
+        if (!userMsg) return;
+
+        this.addMessage(userMsg, 'user');
+        this.chatInput.value = '';
+        this.processBotReply(userMsg);
+    }
+
+    addMessage(text, sender) {
+        const msgElem = document.createElement('div');
+        msgElem.textContent = text;
+        msgElem.className = `message ${sender}`;
+        this.chatMessages.appendChild(msgElem);
+        this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
+    }
+
+    sendBotMessage(text) {
+        this.isTyping = true;
+        setTimeout(() => {
+            this.addMessage(text, 'bot');
+            this.isTyping = false;
+        }, 800);
+    }
+
+    processBotReply(userMsg) {
+        const dayKey = 'day' + this.currentDay;
+        let steps = this.therapeuticTechniques[dayKey].steps;
+
+        this.currentStep++;
+
+        if (this.currentStep < steps.length) {
+            this.sendBotMessage(steps[this.currentStep]);
+        } else {
+            this.completedDays.push(this.currentDay);
+            if (this.currentDay < 5) {
+                this.currentDay++;
+                this.currentStep = 0;
+                this.currentDayElem.textContent = this.currentDay;
+                this.sendBotMessage(`Parabéns por concluir o Dia ${this.currentDay - 1}! Agora vamos para "${this.therapeuticTechniques['day' + this.currentDay].title}". ${this.therapeuticTechniques['day' + this.currentDay].steps[0]}`);
+            } else {
+                this.sendBotMessage('Parabéns! Você concluiu os 5 dias do programa. Continue firme na sua jornada e conte comigo sempre que precisar.');
+                this.updateProgress();
+            }
+        }
+        this.updateProgress();
+    }
+
+    updateProgress() {
+        const progressPercent = (this.completedDays.length / 5) * 100;
+        this.progressBar.style.width = `${progressPercent}%`;
+    }
+
+    showHelp() {
+        alert("Em caso de emergência, ligue 192 ou procure o hospital mais próximo.\n\nCVV: 188\n\nProcure um psicólogo ou terapeuta qualificado para acompanhamento.");
+    }
+}
+
+window.onload = () => {
+    new HabitApp();
+};

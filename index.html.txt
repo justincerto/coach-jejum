@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Jejum de Hábitos - Suporte Inteligente</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body data-color-scheme="dark">
+    <!-- Welcome Screen -->
+    <section id="welcome-screen" class="screen active">
+        <div class="welcome-container">
+            <div class="logo-section">
+                <div class="app-logo">🧠</div>
+                <h1 class="app-title">Jejum de Hábitos</h1>
+                <p class="app-subtitle">Seu companheiro inteligente para quebrar hábitos</p>
+            </div>
+
+            <div class="welcome-content">
+                <p class="description">
+                    Um programa de 5 dias baseado em terapia cognitiva comportamental 
+                    para ajudá-lo a superar hábitos indesejados de forma gradual e sustentável.
+                </p>
+
+                <div class="effectiveness-chart">
+                    <img src="https://ppl-ai-code-interpreter-files.s3.amazonaws.com/web/direct-files/a25b0f30eb1030f56235f1f76358e819/f132d483-d715-46ec-9fd8-7f1b728169da/d3405295.png" 
+                         alt="Efetividade de diferentes intervenções para quebra de hábitos" 
+                         class="chart-image" />
+                </div>
+
+                <button class="btn btn--primary" id="start-journey">
+                    Começar Jornada
+                </button>
+            </div>
+
+            <div class="how-it-works">
+                <h3>Como Funciona</h3>
+                <ol>
+                    <li>Avalie seu hábito</li>
+                    <li>Programa personalizado de 5 dias</li>
+                    <li>Acompanhamento diário com chatbot</li>
+                    <li>Progressão e adaptação contínua</li>
+                </ol>
+            </div>
+        </div>
+    </section>
+
+    <!-- Habit Assessment Screen -->
+    <section id="assessment-screen" class="screen">
+        <div class="assessment-container">
+            <h2>Avalie seu hábito</h2>
+            <form id="habit-form">
+                <label for="habit-select">Qual hábito deseja quebrar?</label>
+                <select id="habit-select" required>
+                    <option value="" disabled selected>Escolha um hábito</option>
+                    <option>Fumar</option>
+                    <option>Redes Sociais</option>
+                    <option>Procrastinação</option>
+                    <option>Comer à Noite</option>
+                    <option>Consumo de Café</option>
+                    <option>Jogos</option>
+                    <option>Compras Compulsivas</option>
+                    <option>Roer Unhas</option>
+                </select>
+
+                <label for="intensity-range">Intensidade do hábito (1-10): <span id="intensity-value">5</span></label>
+                <input type="range" id="intensity-range" min="1" max="10" value="5" />
+
+                <label for="frequency-input">Frequência atual (ex: Diariamente, 3x por semana):</label>
+                <input type="text" id="frequency-input" placeholder="Digite a frequência..." required />
+
+                <label for="motivation-level">Nível de motivação (1-10): <span id="motivation-value">7</span></label>
+                <input type="range" id="motivation-level" min="1" max="10" value="7" />
+
+                <button type="submit" class="btn btn--primary">Iniciar Programa</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Chat Interface Screen -->
+    <section id="chat-screen" class="screen">
+        <header class="chat-header">
+            <h2>Jejum de Hábitos - Dia <span id="current-day">1</span></h2>
+            <div id="progress-bar-container">
+                <div id="progress-bar"></div>
+            </div>
+        </header>
+
+        <main id="chat-messages" class="chat-messages"></main>
+
+        <form id="chat-input-form" class="chat-input-form">
+            <input type="text" id="chat-input" placeholder="Digite sua mensagem..." autocomplete="off" required />
+            <button type="submit" class="btn btn--primary">Enviar</button>
+        </form>
+
+        <footer>
+            <button id="need-help-btn" class="btn btn--warning">Preciso de Ajuda</button>
+        </footer>
+    </section>
+
+    <script src="app.js"></script>
+</body>
+</html>
