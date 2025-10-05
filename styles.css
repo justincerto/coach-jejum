@@ -1,5 +1,3 @@
-/* Básico e otimizado para desktop com tema escuro */
-
 :root {
     --color-bg-dark: #121314;
     --color-bg-secondary: #1f2224;
@@ -246,3 +244,4 @@ input[type=range]::-webkit-slider-runnable-track {
 #chat-input::placeholder {
     color: #666;
 }
+
